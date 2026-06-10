@@ -21,21 +21,40 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
+      - name: Build Web Project
         run: npm run build
 
-      - name: Archive production artifacts
+      - name: Sync Capacitor
+        run: npx cap sync
+
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk ../arbor-dashboard.apk
+
+      - name: Archive Web build
         run: |
           cd dist
-          zip -r ../arbor-dashboard-release.zip .
+          zip -r ../arbor-dashboard-web.zip .
           cd ..
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: arbor-dashboard-release.zip
+          files: |
+            arbor-dashboard-web.zip
+            arbor-dashboard.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
