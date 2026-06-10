@@ -13,19 +13,19 @@ export const Sensors: React.FC = () => {
         </CardHeader>
         <CardContent className="px-4 pb-4">
           <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="p-3 bg-secondary rounded border border-border">
+            <div className="p-3 bg-card/50 rounded-lg border border-border/50 shadow-inner">
               <div className="text-xs text-muted-foreground uppercase">Front</div>
               <div className="text-xl font-bold text-primary">{ultrasonics.front} cm</div>
             </div>
-            <div className="p-3 bg-secondary rounded border border-border">
+            <div className="p-3 bg-card/50 rounded-lg border border-border/50 shadow-inner">
               <div className="text-xs text-muted-foreground uppercase">Rear</div>
               <div className="text-xl font-bold text-primary">{ultrasonics.rear} cm</div>
             </div>
-            <div className="p-3 bg-secondary rounded border border-border">
+            <div className="p-3 bg-card/50 rounded-lg border border-border/50 shadow-inner">
               <div className="text-xs text-muted-foreground uppercase">Left</div>
               <div className="text-xl font-bold text-primary">{ultrasonics.left} cm</div>
             </div>
-            <div className="p-3 bg-secondary rounded border border-border">
+            <div className="p-3 bg-card/50 rounded-lg border border-border/50 shadow-inner">
               <div className="text-xs text-muted-foreground uppercase">Right</div>
               <div className="text-xl font-bold text-primary">{ultrasonics.right} cm</div>
             </div>

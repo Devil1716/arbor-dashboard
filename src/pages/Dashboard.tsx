@@ -40,8 +40,8 @@ export const Dashboard: React.FC = () => {
                 onClick={() => setMode(m)}
                 className={`p-2 rounded border text-xs font-semibold transition-colors ${
                   mode === m 
-                    ? 'bg-primary text-primary-foreground border-primary' 
-                    : 'bg-card text-muted-foreground border-border hover:border-primary/50'
+                    ? 'bg-gradient-to-r from-primary to-blue-500 text-white border-transparent shadow-[0_0_15px_rgba(14,165,233,0.4)] scale-105' 
+                    : 'bg-card/50 text-muted-foreground border-border/50 hover:border-primary/50 hover:bg-card'
                 }`}
               >
                 {m}

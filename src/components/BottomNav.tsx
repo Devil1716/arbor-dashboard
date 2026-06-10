@@ -14,7 +14,7 @@ export const BottomNav: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 w-full bg-card border-t border-border p-2 z-40">
+    <nav className="fixed bottom-0 w-full bg-card/80 backdrop-blur-md border-t border-border/50 p-2 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
       <ul className="flex justify-around items-center">
         {navItems.map((item) => (
           <li key={item.to}>
@@ -23,7 +23,7 @@ export const BottomNav: React.FC = () => {
               className={({ isActive }) =>
                 cn(
                   "flex flex-col items-center p-2 text-xs transition-colors rounded-lg",
-                  isActive ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                  isActive ? "text-primary bg-primary/20 shadow-[inset_0_0_12px_rgba(14,165,233,0.1)]" : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                 )
               }
             >
