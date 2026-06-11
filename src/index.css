@@ -4,13 +4,13 @@
 
 @layer base {
   :root {
-    /* Slate 950 Background */
-    --background: 222.2 84% 4.9%;
+    /* Dark Matte / Carbon Fiber Background */
+    --background: 220 10% 12%;
     --foreground: 210 40% 98%;
-    /* Cards with subtle transparency for glassmorphism */
-    --card: 222.2 84% 4.9%;
+    /* Raised Metallic Hardware Panels */
+    --card: 220 15% 18%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 220 15% 18%;
     --popover-foreground: 210 40% 98%;
     /* Azure Blue Primary Accent */
     --primary: 217.2 91.2% 59.8%;

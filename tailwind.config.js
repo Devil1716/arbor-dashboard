@@ -50,6 +50,12 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
+      boxShadow: {
+        'bevel': 'inset 0 2px 0 0 rgba(255,255,255,0.1), inset 0 -2px 0 0 rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.4)',
+        'bevel-pressed': 'inset 0 4px 8px rgba(0,0,0,0.6), inset 0 0 4px rgba(0,0,0,0.4)',
+        'panel': '0 -2px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+        'screen': 'inset 0 4px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.1)'
+      },
     },
   },
   plugins: [],
