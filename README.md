@@ -124,5 +124,17 @@ To enable the robot to follow your phone:
    ```bash
    pip install pyserial pynmea2
    ```
-4. Use the provided Python script `pi/gps_follow.py` on your Raspberry Pi to parse this target, read from `/dev/serial0`, calculate the Haversine distance and bearing, and steer the robot's motors towards your phone using a P-controller.
+4. Use the provided Python script `pi/gps_follow.py` on your Raspberry Pi.
+
+### How the Algorithm Works
+The script utilizes three distinct algorithms to achieve seamless navigation:
+1. **Haversine Formula**: Calculates the exact Great-Circle distance (in meters) between the robot's GPS coordinates and the phone's GPS coordinates over the Earth's curvature. If the distance drops below 2 meters, the robot automatically halts to avoid collisions.
+2. **Forward Azimuth (Bearing)**: Computes the absolute compass angle (0° to 360°) pointing from the robot to your phone.
+3. **Proportional (P) Controller**: It calculates the error between the Target Bearing and the robot's Current Heading (from its IMU). The error is multiplied by a tuning constant (`kP`), which dynamically adjusts the speeds of the left and right motors to steer smoothly toward the target.
+
+### Connecting the App to the Pi
+1. Ensure both your Android phone and the Raspberry Pi are connected to the **same WiFi network** (or configure the Pi to broadcast a Hotspot and connect your phone to it).
+2. Start the WebSocket server on your Raspberry Pi on port `9090` (e.g., via `server.py` or the GPS script).
+3. Find your Pi's IP address by running `hostname -I` in its terminal.
+4. The mobile app will send the GPS data as a JSON packet (`command: gps_target`) over the WebSocket to that IP address!
 
