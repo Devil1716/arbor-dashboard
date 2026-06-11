@@ -8,6 +8,7 @@ interface RobotState {
   wifiStrength: 'Strong' | 'Medium' | 'Weak' | 'Disconnected';
   mode: RobotMode;
   emergencyStop: boolean;
+  piIpAddress: string | null;
   
   // Telemetry
   ultrasonics: { front: number, rear: number, left: number, right: number };
@@ -30,6 +31,7 @@ interface RobotState {
   setConnected: (status: boolean) => void;
   setMode: (mode: RobotMode) => void;
   setEmergencyStop: (status: boolean) => void;
+  setPiIpAddress: (ip: string | null) => void;
   updateTelemetry: (data: Partial<RobotState>) => void;
   setPhoneLocation: (lat: number, lng: number) => void;
 }
@@ -40,6 +42,7 @@ export const useRobotStore = create<RobotState>((set) => ({
   wifiStrength: 'Disconnected',
   mode: 'Manual',
   emergencyStop: false,
+  piIpAddress: null,
   
   ultrasonics: { front: 0, rear: 0, left: 0, right: 0 },
   imu: { roll: 0, pitch: 0, yaw: 0 },
@@ -58,6 +61,7 @@ export const useRobotStore = create<RobotState>((set) => ({
   setConnected: (status) => set({ connected: status }),
   setMode: (mode) => set({ mode }),
   setEmergencyStop: (status) => set({ emergencyStop: status }),
+  setPiIpAddress: (ip) => set({ piIpAddress: ip }),
   updateTelemetry: (data) => set((state) => ({ ...state, ...data })),
   setPhoneLocation: (lat, lng) => set({ phoneLocation: { lat, lng } }),
 }))
