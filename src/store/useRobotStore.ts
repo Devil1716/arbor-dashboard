@@ -31,6 +31,7 @@ interface RobotState {
   setMode: (mode: RobotMode) => void;
   setEmergencyStop: (status: boolean) => void;
   updateTelemetry: (data: Partial<RobotState>) => void;
+  setPhoneLocation: (lat: number, lng: number) => void;
 }
 
 export const useRobotStore = create<RobotState>((set) => ({
@@ -58,4 +59,5 @@ export const useRobotStore = create<RobotState>((set) => ({
   setMode: (mode) => set({ mode }),
   setEmergencyStop: (status) => set({ emergencyStop: status }),
   updateTelemetry: (data) => set((state) => ({ ...state, ...data })),
+  setPhoneLocation: (lat, lng) => set({ phoneLocation: { lat, lng } }),
 }))

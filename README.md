@@ -111,4 +111,18 @@ To trigger an automated build and release:
 1. Commit your changes.
 2. Tag the commit with a version number starting with `v` (e.g., `git tag v1.0.0`).
 3. Push the tag to GitHub (`git push origin v1.0.0`).
-4. Go to the "Releases" tab on your GitHub repository to download the compiled `arbor-dashboard-release.zip`.
+4. Go to the "Releases" tab on your GitHub repository to download the compiled `.apk` file for Android.
+
+---
+
+## GPS Follow Mode Setup (Raspberry Pi)
+
+To enable the robot to follow your phone:
+1. Ensure your phone app has Location Permissions granted.
+2. The phone will continuously stream a `gps_target` JSON payload over the WebSocket when in **GPS Follow** mode.
+3. Install the required Python packages on your Pi for Serial GPS reading:
+   ```bash
+   pip install pyserial pynmea2
+   ```
+4. Use the provided Python script `pi/gps_follow.py` on your Raspberry Pi to parse this target, read from `/dev/serial0`, calculate the Haversine distance and bearing, and steer the robot's motors towards your phone using a P-controller.
+
