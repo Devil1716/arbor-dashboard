@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Browser } from '@capacitor/browser';
-import { Download, X } from 'lucide-react';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { FileOpener } from '@capawesome-team/capacitor-file-opener';
+import { Download, X, Loader2 } from 'lucide-react';
 import { APP_VERSION } from '@/lib/constants';
 
 interface GitHubRelease {
@@ -17,6 +18,7 @@ interface GitHubRelease {
 export const AutoUpdater: React.FC = () => {
   const [updateAvailable, setUpdateAvailable] = useState<GitHubRelease | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const checkForUpdates = async () => {
@@ -68,12 +70,29 @@ export const AutoUpdater: React.FC = () => {
     const apkAsset = updateAvailable.assets.find(a => a.name.endsWith('.apk')) || updateAvailable.assets[0];
     
     try {
-      await Browser.open({ url: apkAsset.browser_download_url });
-      setDismissed(true); // Hide modal after opening
+      setDownloading(true);
+      
+      // Download the APK directly to native cache
+      const downloadResult = await Filesystem.downloadFile({
+        url: apkAsset.browser_download_url,
+        path: 'update.apk',
+        directory: Directory.Data
+      });
+      
+      // Trigger native package installer
+      await FileOpener.openFile({
+        path: downloadResult.path || '',
+        mimeType: 'application/vnd.android.package-archive'
+      });
+      
+      setDismissed(true);
     } catch (err) {
-      console.error('Failed to open browser:', err);
+      console.error('Failed to download or install update:', err);
+      alert('Background download failed. Try manually from GitHub.');
       // Fallback
       window.open(apkAsset.browser_download_url, '_system');
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -89,7 +108,8 @@ export const AutoUpdater: React.FC = () => {
           </CardTitle>
           <button 
             onClick={() => setDismissed(true)}
-            className="text-muted-foreground hover:text-white transition-colors"
+            disabled={downloading}
+            className="text-muted-foreground hover:text-white transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
@@ -110,15 +130,25 @@ export const AutoUpdater: React.FC = () => {
           <div className="flex gap-2">
             <button 
               onClick={() => setDismissed(true)}
-              className="flex-1 py-2 bg-secondary text-foreground text-sm rounded shadow-bevel active:shadow-bevel-pressed font-medium transition-all"
+              disabled={downloading}
+              className="flex-1 py-2 bg-secondary text-foreground text-sm rounded shadow-bevel active:shadow-bevel-pressed font-medium transition-all disabled:opacity-50"
             >
               Later
             </button>
             <button 
               onClick={handleUpdate}
-              className="flex-1 py-2 bg-primary text-white text-sm rounded shadow-bevel active:shadow-bevel-pressed font-bold transition-all flex items-center justify-center gap-2"
+              disabled={downloading}
+              className="flex-1 py-2 bg-primary text-white text-sm rounded shadow-bevel active:shadow-bevel-pressed font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              <Download className="w-4 h-4" /> Download
+              {downloading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> Downloading...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" /> Download & Install
+                </>
+              )}
             </button>
           </div>
         </CardContent>
