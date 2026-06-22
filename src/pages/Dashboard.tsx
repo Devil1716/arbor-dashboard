@@ -4,7 +4,48 @@ import { Badge } from '@/components/ui/badge';
 import { useRobotStore, type RobotMode } from '@/store/useRobotStore';
 import { Joystick } from '@/components/Joystick';
 import { Slider } from '@/components/ui/slider';
-import { Wifi } from 'lucide-react';
+import { Wifi, Loader2 } from 'lucide-react';
+
+const LiveVideoPlayer: React.FC<{ url: string }> = ({ url }) => {
+  const [errorCount, setErrorCount] = React.useState(0);
+  const [loading, setLoading] = React.useState(true);
+  
+  // Append a timestamp to force the browser to bypass cache if it reconnects
+  const streamUrl = React.useMemo(() => {
+    try {
+      const u = new URL(url);
+      u.searchParams.set('t', errorCount.toString());
+      return u.toString();
+    } catch {
+      return `${url}?t=${errorCount}`;
+    }
+  }, [url, errorCount]);
+
+  return (
+    <>
+      {loading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10 gap-2">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <span className="text-xs text-muted-foreground font-medium">Connecting...</span>
+        </div>
+      )}
+      <img 
+        src={streamUrl} 
+        alt="Live Telecast" 
+        className="w-full h-full object-cover transition-opacity duration-300"
+        style={{ opacity: loading ? 0 : 1 }}
+        onLoad={() => setLoading(false)}
+        onError={() => {
+          setLoading(true);
+          // Wait 2 seconds before trying to reconnect
+          setTimeout(() => setErrorCount(c => c + 1), 2000);
+        }}
+      />
+      <div className="absolute inset-0 border-2 border-primary/20 pointer-events-none rounded-b-md" />
+    </>
+  );
+};
+
 export const Dashboard: React.FC = () => {
   const { mode, setMode, videoUrl } = useRobotStore();
   const modes: RobotMode[] = ['Manual', 'Autonomous', 'GPS Follow', 'Human Tracking'];
@@ -30,18 +71,7 @@ export const Dashboard: React.FC = () => {
                 <p className="text-xs text-muted-foreground">Please configure the connection URLs in the Settings tab.</p>
               </div>
             ) : (
-              <>
-                <img 
-                  src={videoUrl} 
-                  alt="Live Telecast" 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement?.classList.add('error-state');
-                  }}
-                />
-                <div className="absolute inset-0 border-2 border-primary/20 pointer-events-none rounded-b-md" />
-              </>
+              <LiveVideoPlayer url={videoUrl} />
             )}
           </div>
         </CardContent>
