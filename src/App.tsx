@@ -7,10 +7,12 @@ import { Sensors } from './pages/Sensors';
 import { Ros2Monitor } from './pages/Ros2Monitor';
 import { Status } from './pages/Status';
 import { Settings } from './pages/Settings';
+import { AutoUpdater } from './components/AutoUpdater';
 
 function App() {
   return (
     <BrowserRouter>
+      <AutoUpdater />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
