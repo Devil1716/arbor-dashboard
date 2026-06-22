@@ -3,10 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.arbor.dashboard',
   appName: 'arbor-dashboard',
-  webDir: 'dist',
-  server: {
-    cleartext: true
-  }
+  webDir: 'dist'
 };
 
 export default config;
