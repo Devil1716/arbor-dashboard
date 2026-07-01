@@ -1,3 +1,3 @@
 // Application Constants
 
-export const APP_VERSION = 'v1.0.17';
+export const APP_VERSION = 'v1.0.18';

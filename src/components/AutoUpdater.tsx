@@ -76,7 +76,7 @@ export const AutoUpdater: React.FC = () => {
       const downloadResult = await Filesystem.downloadFile({
         url: apkAsset.browser_download_url,
         path: 'update.apk',
-        directory: Directory.Data
+        directory: Directory.Cache
       });
       
       // Trigger native package installer
