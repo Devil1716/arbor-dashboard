@@ -63,7 +63,15 @@ export const useRobotStore = create<RobotState>((set) => ({
   setConnected: (status) => set({ connected: status }),
   setMode: (mode) => set({ mode }),
   setEmergencyStop: (status) => set({ emergencyStop: status }),
-  setUrls: (ws, video) => set({ wsUrl: ws, videoUrl: video }),
+  setUrls: (ws, video) => {
+    set({ wsUrl: ws, videoUrl: video });
+    if (ws) {
+      import('@/lib/ws').then(({ wsService }) => {
+        wsService.connect(ws);
+        wsService.onStatusChange = (status) => set({ connected: status });
+      });
+    }
+  },
   updateTelemetry: (data) => set((state) => ({ ...state, ...data })),
   setPhoneLocation: (lat, lng) => set({ phoneLocation: { lat, lng } }),
 }))

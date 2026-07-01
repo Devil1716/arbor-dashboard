@@ -6,6 +6,8 @@ import { Joystick } from '@/components/Joystick';
 import { Slider } from '@/components/ui/slider';
 import { Wifi, Loader2 } from 'lucide-react';
 
+import { wsService } from '@/lib/ws';
+
 const LiveVideoPlayer: React.FC<{ url: string }> = ({ url }) => {
   const [errorCount, setErrorCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -21,6 +23,16 @@ const LiveVideoPlayer: React.FC<{ url: string }> = ({ url }) => {
     }
   }, [url, errorCount]);
 
+  const handleVideoClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    
+    // Optional: show some visual feedback here
+    console.log(`Tracking target at x:${x.toFixed(2)} y:${y.toFixed(2)}`);
+    wsService.send({ type: 'track', x, y });
+  };
+
   return (
     <>
       {loading && (
@@ -32,7 +44,8 @@ const LiveVideoPlayer: React.FC<{ url: string }> = ({ url }) => {
       <img 
         src={streamUrl} 
         alt="Live Telecast" 
-        className="w-full h-full object-cover transition-opacity duration-300"
+        onClick={handleVideoClick}
+        className="w-full h-full object-cover transition-opacity duration-300 cursor-crosshair"
         style={{ opacity: loading ? 0 : 1 }}
         onLoad={() => setLoading(false)}
         onError={() => {

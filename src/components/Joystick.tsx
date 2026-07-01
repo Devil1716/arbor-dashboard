@@ -1,19 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Circle } from 'lucide-react';
+import { wsService } from '@/lib/ws';
 
 export const Joystick: React.FC = () => {
   const [activeDir, setActiveDir] = useState<string | null>(null);
 
   const handleCommand = (cmd: string) => {
     setActiveDir(cmd);
-    console.log(`Sending command: ${cmd}`);
-    // WS send here
+    wsService.send({ type: 'cmd', val: cmd });
   };
 
   const handleRelease = () => {
     setActiveDir(null);
-    console.log(`Sending command: stop`);
+    wsService.send({ type: 'cmd', val: 'stop' });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowUp') handleCommand('forward');
+      if (e.key === 'ArrowDown') handleCommand('backward');
+      if (e.key === 'ArrowLeft') handleCommand('left');
+      if (e.key === 'ArrowRight') handleCommand('right');
+    };
+    
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        handleRelease();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   const btnClass = "w-14 h-14 bg-secondary rounded-full flex items-center justify-center text-primary active:bg-primary active:text-primary-foreground transition-colors border border-border touch-none select-none";
   const activeClass = "bg-primary text-primary-foreground";
